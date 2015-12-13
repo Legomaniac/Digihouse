@@ -5,7 +5,7 @@ import json
 import datetime
 from flask import Flask, request, render_template
 
-curlList = ["curl", "--capath", "/opt/etc/ssl/certs/", "https://api.particle.io/v1/devices/230025001247343339383037/fire", "-d", "access_token=78cbc2588e09ca1aab0a3338511da8a3c0f7d736", "-d"]
+curlList = ["curl", "--capath", "/opt/etc/ssl/certs/", "https://api.particle.io/v1/devices/230025001247343339383037/fire", "-d", "access_token=youdontgetthiseither", "-d"]
 
 def controlFire(fire):
     if fire:
