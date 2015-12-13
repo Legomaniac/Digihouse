@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>digihouse</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+$(function() {
+  $( "#datepicker" ).datepicker();
+});
+</script>
+</head>
+
+<body>
+<div calss="container-fluid">
+<h1 class="text-center">
+Welcome to the Digihouse
+</h1>
+
+<div class="row">
+  <div class="col-md-6">
+  <form method=post>
+    <p class="text-center">
+    Fireplace:
+    <br>
+    <input type="radio" name="fireState" value="on"> On
+    <br>
+    <input type="radio" name="fireState" value="off"> Off
+    <br>
+    {{ fireOut }}
+    </p>
+  </div>
+  <div class="col-md-6">
+    <p class="text-center">
+    Hot tub water last changed {{ tubOut }} days ago.
+    <br>
+    <br>
+    Update date: <input type="text" name="tubDate" id="datepicker">
+    </p>
+  </div>
+</div>
+  <br>
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <p class="text-center">
+    PIN:
+    <input type="password" name="pin">
+    <br>
+    <button type=submit>Execute</button>
+    </p>
+  </div>
+<div class="col-md-4"></div>
+</div>
+</form>
+<br>
+<br>
+<p class="text-center">
+There have been {{ count }} visits.
+</p>
+
+</div>
+</body>
+</html>
