@@ -5,7 +5,13 @@ import json
 import datetime
 from flask import Flask, request, render_template
 
-curlList = ["curl", "--capath", "/opt/etc/ssl/certs/", "https://api.particle.io/v1/devices/230025001247343339383037/fire", "-d", "access_token=youdontgetthiseither", "-d"]
+with open('/jffs/digipass.json', 'r') as jsonFile:
+    credentials = json.loads(jsonFile.read())
+    device = "https://api.particle.io/v1/devices/" + credentials['device'] + "/fire"
+    token = "access_token=" + credentials['token']
+    pin = credentials['pin']
+
+curlList = ["curl", "--capath", "/opt/etc/ssl/certs/", device, "-d", token, "-d"]
 
 def controlFire(fire):
     if fire:
@@ -20,6 +26,7 @@ def index():
     with open('/jffs/digihouse.json', 'r') as jsonFile:
         jsonData = json.loads(jsonFile.read())
 
+    passOutput = "Please enter PIN"
     fireOutput = "Control the fire!"
     if request.method == 'POST':
         fireResp = "unset"
@@ -27,7 +34,8 @@ def index():
             fireResp = request.form['fireState']
         tubResp = request.form['tubDate']
         pinIn = request.form['pin']
-        if pinIn == "haha.. not so fast!":
+        if pinIn == pin:
+            passOutput = "You did it!"
             if tubResp != "":
                 jsonData['tubChange'] = tubResp
             if fireResp == "on":
@@ -39,7 +47,7 @@ def index():
             else:
                 fireOutput = "Control the fire!"
         else:
-            output = "Incorrect PIN"
+            passOutput = "Incorrect PIN"
 
     tubDate = datetime.datetime.strptime(jsonData['tubChange'], "%m/%d/%Y")
     now = datetime.datetime.now()
@@ -52,7 +60,7 @@ def index():
     with open('/jffs/digihouse.json', 'w') as jsonFile:
         jsonFile.write(json.dumps(jsonData, sort_keys=True, indent=4))
 
-    return render_template('index.html', count=str(num), fireOut=fireOutput, tubOut=daysSince) 
+    return render_template('index.html', count=str(num), fireOut=fireOutput, tubOut=daysSince, tubDate=jsonData['tubChange'], passOut=passOutput)
 
 if __name__ == "__main__":
     app.run()
