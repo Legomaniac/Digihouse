@@ -26,6 +26,17 @@ def index():
     with open('/jffs/digihouse.json', 'r') as jsonFile:
         jsonData = json.loads(jsonFile.read())
 
+    host = request.remote_addr
+    if host in jsonData['IPs']:
+        count = jsonData['IPs'][host]
+        count += 1
+        jsonData['IPs'][host] = count
+    else:
+        jsonData['IPs'][host] = 1
+    num = 0
+    for uniq in jsonData['IPs']:
+        num += jsonData['IPs'][uniq]
+    uniques = len(jsonData['IPs'])
     passOutput = "Please enter PIN"
     fireOutput = "Control the fire!"
     if request.method == 'POST':
@@ -53,14 +64,11 @@ def index():
     now = datetime.datetime.now()
     daysSince = (now - tubDate).days
 
-    num = jsonData['count']
-    num += 1
-    jsonData['count'] = num
-
     with open('/jffs/digihouse.json', 'w') as jsonFile:
         jsonFile.write(json.dumps(jsonData, sort_keys=True, indent=4))
 
-    return render_template('index.html', count=str(num), fireOut=fireOutput, tubOut=daysSince, tubDate=jsonData['tubChange'], passOut=passOutput)
+    return render_template('index.html', count=str(num), fireOut=fireOutput, tubOut=daysSince, \
+                            tubDate=jsonData['tubChange'], passOut=passOutput, uniqOut=uniques)
 
 if __name__ == "__main__":
     app.run()
